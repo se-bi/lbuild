@@ -22,7 +22,7 @@ from lbuild.format import format_option_short_description
 
 from lbuild.api import Builder
 
-__version__ = '1.12.4'
+__version__ = '1.13.0'
 
 
 class InitAction:
@@ -297,6 +297,12 @@ class BuildAction(ManipulationActionBase):
             default=False,
             help="Build, but do not write any files. Prints out all generated file names.")
         parser.add_argument(
+            "--symlink",
+            dest="symlink",
+            action="store_true",
+            default=False,
+            help="Build, but when possible, use symlinks for file copies.")
+        parser.add_argument(
             "--no-log",
             dest="buildlog",
             action="store_false",
@@ -308,7 +314,8 @@ class BuildAction(ManipulationActionBase):
 
     @staticmethod
     def perform(args, builder):
-        buildlog = builder.build(args.path, args.modules, simulate=args.simulate)
+        buildlog = builder.build(args.path, args.modules, simulate=args.simulate,
+                                 use_symlinks=args.symlink)
 
         if args.simulate:
             ostream = []
